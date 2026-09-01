@@ -3,7 +3,7 @@ cli.py
 Versión de consola del programa de Gauss-Jordan.
 """
 
-from gauss_jordan import resolver, matriz_texto, formatear
+from gauss_jordan import resolver, matriz_texto, formatear, texto_comprobacion
 
 
 def pedir_matriz():
@@ -93,6 +93,19 @@ def main():
         print("No tiene solución.")
 
     print("\n" + resultado["soluciones"])
+
+    comprobar = input("\n¿Desea comprobar el resultado? (s/n): ")
+
+    while comprobar.lower() not in ("s", "n", "si", "no"):
+        comprobar = input("Seleccione s o n: ")
+
+    if comprobar.lower() in ("s", "si"):
+
+        print("\n========================================")
+        print("COMPROBACIÓN (A_original @ X vs B_original)")
+        print("========================================")
+
+        print(texto_comprobacion(resultado["comprobacion"], modo))
 
 
 if __name__ == "__main__":

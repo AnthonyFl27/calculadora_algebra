@@ -8,7 +8,7 @@ La lógica matemática está en gauss_jordan.py.
 import tkinter as tk
 from tkinter import messagebox
 
-from gauss_jordan import resolver, matriz_texto
+from gauss_jordan import resolver, matriz_texto, texto_comprobacion
 
 
 class GaussJordanGUI:
@@ -137,6 +137,16 @@ class GaussJordanGUI:
             font=("Arial", 11, "bold")
         ).grid(row=0, column=1, padx=8)
 
+        self.boton_comprobar = tk.Button(
+            botones,
+            text="Comprobar resultado",
+            command=self.comprobar_resultado,
+            width=18,
+            font=("Arial", 11, "bold"),
+            state="disabled"
+        )
+        self.boton_comprobar.grid(row=0, column=2, padx=8)
+
         # -------------------------------
         # ÁREA DE RESULTADO
         # -------------------------------
@@ -178,6 +188,7 @@ class GaussJordanGUI:
 
         self.entradas = []
         self.ultimo_resultado = None
+        self.boton_comprobar.config(state="disabled")
 
         # Encabezados de variables.
         for j in range(variables):
@@ -274,6 +285,7 @@ class GaussJordanGUI:
                 entrada.delete(0, tk.END)
 
         self.ultimo_resultado = None
+        self.boton_comprobar.config(state="disabled")
         self.limpiar_salida()
 
     # ==================================================
@@ -301,6 +313,31 @@ class GaussJordanGUI:
 
         return matriz
 
+    def comprobar_resultado(self):
+
+        if self.ultimo_resultado is None:
+
+            messagebox.showwarning(
+                "Aviso",
+                "Primero resuelva el sistema para poder comprobarlo."
+            )
+            return
+
+        self.limpiar_salida()
+
+        self.escribir(
+            "========================================\n"
+            "COMPROBACIÓN (A_original @ X vs B_original)\n"
+            "========================================\n\n"
+        )
+
+        self.escribir(
+            texto_comprobacion(
+                self.ultimo_resultado["comprobacion"],
+                self.modo.get()
+            )
+        )
+
     # ==================================================
     # RESOLVER
     # ==================================================
@@ -321,6 +358,7 @@ class GaussJordanGUI:
             matriz,
             self.modo.get()
         )
+        self.boton_comprobar.config(state="normal")
 
         resultado = self.ultimo_resultado
 
@@ -377,6 +415,7 @@ class GaussJordanGUI:
                 matriz,
                 self.modo.get()
             )
+            self.boton_comprobar.config(state="normal")
 
         resultado = self.ultimo_resultado
         modo = self.modo.get()
